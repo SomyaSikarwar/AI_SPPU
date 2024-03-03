@@ -43,37 +43,4 @@ public class Astar {
         }
         astar(next);
     }
-
-   /* public void traceHelper(){
-        Node sourceNode = graph.findNode(start);
-        tracePath(sourceNode);
-    }
-
-    public void tracePath(Node sourceNode){
-        ArrayList<Edge> edges = new ArrayList<>();
-        ArrayList<Node> tempCalcs = new ArrayList<>();
-        for (var edge: graph.edges) {
-            if (edge.start == sourceNode){
-                edges.add(edge);
-            }
-        }
-
-        for (var edge: edges) {
-            tempCalcs.add(new Node(edge.end.label, costOfEdge(edge.end.heuristic, edge.cost)));
-        }
-
-        int min = tempCalcs.get(0).heuristic;
-
-        Node next = new Node("", 0);
-        for (int i = 1; i < tempCalcs.size(); i++) {
-            if (min > tempCalcs.get(i).heuristic){
-                min = tempCalcs.get(i).heuristic;
-                next = tempCalcs.get(i);
-            }
-        }
-
-        tracePath(next);
-    }*/
-
-
 }
