@@ -1,10 +1,17 @@
 import java.util.ArrayList;
 
 public class logic {
+
+    public void createAllPossiblePaths(int[][] matt){
+        for (int i = 0; i < matt.length; i++) {
+            tsp(matt, i);
+        }
+    }
+
     public void tsp(int[][] matt, int startNode) {
         int numNodes = matt.length;
         ArrayList<Integer> visitedNodes = new ArrayList<>();
-        int[] route = new int[numNodes];
+        int[] route = new int[numNodes + 1];
         route[0] = startNode ;
         visitedNodes.add(startNode);
 
@@ -31,12 +38,12 @@ public class logic {
         }
 
         // Add return to the start node
-        route[numNodes - 1] = startNode;
+        route[route.length - 1] = startNode;
         totalCost += matt[currentNode][startNode]; // Cost to return to start node
 
         // Print the route
         System.out.println("TSP Route:");
-        for (int i = 0; i < numNodes; i++) {
+        for (int i = 0; i < route.length; i++) {
             System.out.print(route[i] + " ");
         }
         System.out.println();
