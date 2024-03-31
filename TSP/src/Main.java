@@ -14,7 +14,7 @@ public class Main {
 
 
 
-        obj.tsp(matt , 0);
+        obj.createAllPossiblePaths(matt);
 
     }
 }
