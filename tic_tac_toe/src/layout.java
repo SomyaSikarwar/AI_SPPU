@@ -27,28 +27,25 @@ public class layout {
         }
     }
 
-
     public boolean isValidMove(int row, int col) {
-        if(board[row][col] == ' ')
+        if (board[row][col] == ' ')
             return true;
         else
             return false;
     }
 
     // Make a move
-    public void swichplayer() {
-        //board[row][col] = currentPlayer;
-        // Switch player
+    public void switchPlayer() {
         if (currentPlayer == 'X') {
-            currentPlayer = 'O'; // If current player is 'X', switch to 'O'
+            currentPlayer = 'O';
         } else {
-            currentPlayer = 'X'; // If current player is 'O', switch to 'X'
+            currentPlayer = 'X';
         }
     }
 
     // Check for a win
     public boolean checkWin() {
-        // rows, columns
+        // Rows, columns
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
                 return true; // Row win
@@ -79,28 +76,101 @@ public class layout {
         return true;
     }
 
-    public void gamePlay(){
-        while(isBoardFull() != true || checkWin() != true){
-            System.out.println("Player " + currentPlayer + "'s turn.");
-            System.out.print("Enter row and column (0-2): ");
-            int row = sc.nextInt();
-            int col = sc.nextInt();
-            if (isValidMove(row,col)) {
-                board[row][col] = currentPlayer;
-                if (checkWin()) {
-                    System.out.println("Player " + currentPlayer + " wins!");
-                    break;
-                }
-                else if (isBoardFull()) {
-                    System.out.println("It's a draw!");
-                    break;
-                }
-                else {
-                    swichplayer();
-                }
+    // Minimax algorithm
+    private int minimax(char player) {
+        if (checkWin()) {
+            if (player == 'O')
+                return 1;
+            else
+                return -1;
+        } else if (isBoardFull()) {
+            return 0;
+        }
 
-            }else{
-                System.out.println("Invalid move. Try again.");
+        if (player == 'O') {
+            int bestScore = Integer.MIN_VALUE;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (board[i][j] == ' ') {
+                        board[i][j] = player;
+                        bestScore = Math.max(bestScore, minimax('X'));
+                        board[i][j] = ' ';
+                    }
+                }
+            }
+            return bestScore;
+        } else {
+            int bestScore = Integer.MAX_VALUE;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (board[i][j] == ' ') {
+                        board[i][j] = player;
+                        bestScore = Math.min(bestScore, minimax('O'));
+                        board[i][j] = ' ';
+                    }
+                }
+            }
+            return bestScore;
+        }
+    }
+
+    // Find the best move for the computer
+    private int[] findBestMove() {
+        int bestScore = Integer.MIN_VALUE;
+        int[] move = new int[2];
+        move[0] = -1;
+        move[1] = -1;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == ' ') {
+                    board[i][j] = 'O';
+                    int score = minimax('X');
+                    board[i][j] = ' ';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move[0] = i;
+                        move[1] = j;
+                    }
+                }
+            }
+        }
+        return move;
+    }
+
+    // Computer makes a move
+    public void computerMove() {
+        int[] move = findBestMove();
+        board[move[0]][move[1]] = 'O';
+    }
+
+    // Game play
+    public void gamePlay() {
+        while (isBoardFull() != true || checkWin() != true) {
+            System.out.println("Player " + currentPlayer + "'s turn.");
+
+            if (currentPlayer == 'X') {
+                System.out.print("Enter row and column (0-2): ");
+                int row = sc.nextInt();
+                int col = sc.nextInt();
+                if (isValidMove(row, col)) {
+                    board[row][col] = currentPlayer;
+                } else {
+                    System.out.println("Invalid move. Try again.");
+                    continue;
+                }
+            } else {
+                computerMove();
+            }
+
+            if (checkWin()) {
+                System.out.println("Player " + currentPlayer + " wins!");
+                break;
+            } else if (isBoardFull()) {
+                System.out.println("It's a draw!");
+                break;
+            } else {
+                switchPlayer();
             }
 
             System.out.println("Current board:");
@@ -108,4 +178,9 @@ public class layout {
         }
     }
 
+    public static void main(String[] args) {
+        layout game = new layout();
+        System.out.println("Welcome to Tic Tac Toe!");
+        game.gamePlay();
+    }
 }
