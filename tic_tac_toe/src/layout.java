@@ -178,9 +178,4 @@ public class layout {
         }
     }
 
-    public static void main(String[] args) {
-        layout game = new layout();
-        System.out.println("Welcome to Tic Tac Toe!");
-        game.gamePlay();
-    }
 }
